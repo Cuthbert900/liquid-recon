@@ -1,3 +1,4 @@
+import logger from '@/lib/logger';
 import { normalizeExtract, type NormalizedRecord } from '@/lib/normalization';
 import type { SourceKey, StoredExtract } from '@/lib/data-sources-context';
 import {
@@ -71,6 +72,7 @@ export function reconcile(
    * matching instead of being excluded. */
   ignoreDuplicateGroupIds: Set<string> = new Set()
 ): ReconciliationResult {
+  logger.info('Starting reconciliation process');
   const rawBySource: Record<SourceKey, NormalizedRecord[]> = {
     dynamics: [],
     prism: [],
@@ -107,6 +109,10 @@ export function reconcile(
     );
     bySource[source] = unique;
     duplicates.push(...dupGroups);
+    logger.debug(
+      { source, count: unique.length, duplicates: dupGroups.length },
+      'Duplicate detection complete'
+    );
   }
 
   const allRecords = [
@@ -124,10 +130,15 @@ export function reconcile(
 
   for (const [sa, sb] of sourcePairs) {
     if (bySource[sa].length === 0 || bySource[sb].length === 0) continue;
+    logger.debug({ sourceA: sa, sourceB: sb }, 'Matching pair');
     const pairs = matchPair(bySource[sa], bySource[sb]);
     for (const [recA, recB] of pairs) {
       uf.union(recA.key, recB.key);
     }
+    logger.debug(
+      { sourceA: sa, sourceB: sb, pairs: pairs.length },
+      'Matching complete'
+    );
   }
 
   const clusters = new Map<string, NormalizedRecord[]>();
@@ -240,5 +251,6 @@ export function reconcile(
       .reduce((s, g) => s + g.amount, 0),
   };
 
+  logger.info({ summary }, 'Reconciliation process complete');
   return { groups, totalsBySource, duplicates, summary };
 }
