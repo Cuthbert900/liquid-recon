@@ -196,6 +196,21 @@ function buildRowsFromAoa(
   return { headers: dedupedHeaders, rows };
 }
 
+export function validateRow(
+  row: ExtractRow,
+  amountColumn: string | null,
+  dateColumn: string | null
+): string[] {
+  const errors: string[] = [];
+  if (amountColumn && coerceNumber(row[amountColumn]) === null) {
+    errors.push(`Invalid amount in column "${amountColumn}"`);
+  }
+  if (dateColumn && coerceDate(row[dateColumn]) === null) {
+    errors.push(`Invalid date in column "${dateColumn}"`);
+  }
+  return errors;
+}
+
 export async function parseExtractFile(file: File): Promise<ParsedExtract> {
   const buffer = await file.arrayBuffer();
   const workbook = XLSX.read(buffer, { type: 'array', cellDates: true });
