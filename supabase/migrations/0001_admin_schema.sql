@@ -71,6 +71,7 @@ alter table public.provider_keys enable row level security;
 create table if not exists public.audit_log (
   id          bigint generated always as identity primary key,
   occurred_at timestamptz not null default now(),
+  actor_id    uuid,
   actor_email text,
   actor_name  text,
   action      text not null,
