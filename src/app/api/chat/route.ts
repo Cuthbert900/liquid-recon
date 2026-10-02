@@ -6,6 +6,8 @@ import {
   type ProviderId,
 } from '@/lib/ai/providers';
 import { resolveProviderApiKey } from '@/lib/ai/key-resolution';
+import { getFromCache, setInCache } from '@/lib/cache';
+import { createHash } from 'crypto';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,6 +44,17 @@ export async function POST(request: Request) {
   const providerId = provider as ProviderId;
   const meta = getProviderMeta(providerId);
 
+  // Generate a cache key from the request body
+  const hash = createHash('sha256');
+  hash.update(JSON.stringify({ provider, messages, context }));
+  const cacheKey = hash.digest('hex');
+
+  // Check the cache
+  const cached = getFromCache<any>(cacheKey);
+  if (cached) {
+    return NextResponse.json(cached);
+  }
+
   const systemPrompt: ChatMessage = {
     role: 'system',
     content:
@@ -62,12 +75,18 @@ export async function POST(request: Request) {
       { messages: [systemPrompt, ...messages] },
       apiKey
     );
-    return NextResponse.json({
+
+    const response = {
       reply: result.reply,
       usage: result.usage,
       configured: Boolean(apiKey),
       provider: meta.id,
-    });
+    };
+
+    // Cache the response
+    setInCache(cacheKey, response);
+
+    return NextResponse.json(response);
   } catch (err) {
     return NextResponse.json(
       { error: err instanceof Error ? err.message : 'Provider call failed' },
