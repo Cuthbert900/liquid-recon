@@ -38,10 +38,16 @@ function amountBucketKey(absAmount: number): number {
 }
 
 /**
- * Greedy bipartite matcher between two sources. Prefers exact reference
- * matches, falls back to closest amount+date pairing within tolerance.
- * Real netting extracts rarely share a common transaction ID across
- * Dynamics/Prism/Bank, so amount+date proximity carries most of the weight.
+ * Performs a greedy bipartite matching between two arrays of normalized records.
+ * The matching process prioritizes exact reference matches and falls back to the
+ * closest amount and date pairing within a defined tolerance. This is crucial
+ * for netting extracts that often lack a common transaction ID across different
+ * systems (e.g., Dynamics, Prism, Bank).
+ *
+ * @param a The first array of normalized records.
+ * @param b The second array of normalized records.
+ * @returns An array of tuples, where each tuple contains a matched pair of
+ * records (`[recordFromA, recordFromB]`) and their match score.
  */
 export function matchPair(
   a: NormalizedRecord[],

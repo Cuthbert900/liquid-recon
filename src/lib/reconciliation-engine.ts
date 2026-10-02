@@ -12,8 +12,15 @@ const AMOUNT_TOLERANCE_PCT = 0.005; // 0.5% — covers FX/fee shaving on gateway
 const DATE_WINDOW_DAYS = 5; // netting settlement lag between bank, prism, and D365 posting
 const HIGH_VALUE_THRESHOLD = 5000; // flag unmatched records above this for investigation priority
 
+/**
+ * The status of a match group, indicating whether it's a perfect match, a
+ * timing difference, a potential mis-post, or requires investigation.
+ */
 export type MatchStatus = 'matched' | 'timing' | 'mispost' | 'investigate';
 
+/**
+ * Represents a group of matched records from different sources.
+ */
 export interface MatchGroup {
   id: string;
   status: MatchStatus;
@@ -25,6 +32,10 @@ export interface MatchGroup {
   note: string;
 }
 
+/**
+ * The final result of the reconciliation process, containing matched groups,
+ * summary statistics, and information about duplicate records.
+ */
 export interface ReconciliationResult {
   groups: MatchGroup[];
   totalsBySource: Record<SourceKey, { count: number; amount: number }>;
@@ -43,6 +54,16 @@ export interface ReconciliationResult {
   };
 }
 
+/**
+ * The main entry point for the reconciliation process. It takes extracts from
+ * different sources, normalizes them, detects duplicates, matches them, and
+ * produces a final reconciliation result.
+ *
+ * @param filesBySource A record containing arrays of stored extracts, keyed by their source.
+ * @param ignoreDuplicateGroupIds A set of duplicate group IDs to ignore,
+ * allowing a reviewer to override the duplicate detection.
+ * @returns The final reconciliation result.
+ */
 export function reconcile(
   filesBySource: Record<SourceKey, StoredExtract[]>,
   /** DuplicateGroup ids a reviewer has confirmed are not real duplicates —

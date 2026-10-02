@@ -6,9 +6,10 @@ import {
 import type { SourceKey, StoredExtract } from '@/lib/data-sources-context';
 
 /**
- * A single transaction, normalized out of whichever source file it came
- * from so the matching engine can compare apples to apples regardless of
- * whether it originated in Dynamics, Prism, or a bank statement.
+ * Represents a single transaction record that has been normalized from its
+ * original source format. This allows the matching engine to compare records
+ * from different sources (e.g., Dynamics, Prism, bank statements) in a
+ * consistent way.
  */
 export interface NormalizedRecord {
   key: string;
@@ -24,12 +25,23 @@ export interface NormalizedRecord {
   raw: ExtractRow;
 }
 
+/**
+ * Extracts and normalizes the reference string from a raw extract row.
+ * @param raw The raw extract row.
+ * @param idColumn The name of the column containing the reference ID.
+ * @returns A normalized reference string (trimmed and lowercased), or an empty string if not available.
+ */
 function normalizeReference(raw: ExtractRow, idColumn: string | null): string {
   if (!idColumn) return '';
   const v = raw[idColumn];
   return v === null || v === undefined ? '' : String(v).trim().toLowerCase();
 }
 
+/**
+ * Normalizes an entire extract of records from a stored file.
+ * @param extract The stored extract containing the rows to be normalized.
+ * @returns An array of normalized records.
+ */
 export function normalizeExtract(extract: StoredExtract): NormalizedRecord[] {
   const { amountColumn, dateColumn, currencyColumn, idColumn } = extract;
   const out: NormalizedRecord[] = [];
