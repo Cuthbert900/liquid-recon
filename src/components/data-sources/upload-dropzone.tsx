@@ -47,10 +47,8 @@ export function UploadDropzone({
         handleFiles(e.dataTransfer.files);
       }}
       className={cn(
-        'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-4 py-8 text-center transition-colors',
-        isDragging
-          ? 'border-primary bg-primary/5'
-          : 'border-border hover:border-primary/50 hover:bg-muted/40',
+        'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-neutral-200/80 bg-neutral-50/30 px-4 py-8 text-center transition-colors hover:border-primary/50 hover:bg-neutral-50/80',
+        isDragging && 'border-primary bg-primary/5',
         accentClassName
       )}
     >

@@ -5,6 +5,7 @@ import {
   SearchIcon,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 import type { MatchStatus } from '@/lib/reconciliation-engine';
 
 export const STATUS_META: Record<
@@ -12,20 +13,32 @@ export const STATUS_META: Record<
   {
     label: string;
     icon: typeof CheckCircle2Icon;
-    variant: 'default' | 'secondary' | 'destructive' | 'outline';
+    className: string;
   }
 > = {
-  matched: { label: 'Matched', icon: CheckCircle2Icon, variant: 'secondary' },
-  timing: { label: 'Timing difference', icon: ClockIcon, variant: 'outline' },
+  matched: {
+    label: 'Matched',
+    icon: CheckCircle2Icon,
+    className:
+      'bg-success-bg text-success-text border border-emerald-200/50 px-2.5 py-0.5 rounded-full font-medium inline-flex items-center text-xs',
+  },
+  timing: {
+    label: 'Timing difference',
+    icon: ClockIcon,
+    className:
+      'bg-warning-bg text-warning-text border border-amber-200/50 px-2.5 py-0.5 rounded-full font-medium inline-flex items-center text-xs',
+  },
   mispost: {
     label: 'Mis-post',
     icon: AlertTriangleIcon,
-    variant: 'destructive',
+    className:
+      'bg-alert-bg text-alert-text border border-rose-200/50 px-2.5 py-0.5 rounded-full font-medium inline-flex items-center text-xs',
   },
   investigate: {
     label: 'Investigate',
     icon: SearchIcon,
-    variant: 'destructive',
+    className:
+      'bg-alert-bg text-alert-text border border-rose-200/50 px-2.5 py-0.5 rounded-full font-medium inline-flex items-center text-xs',
   },
 };
 
@@ -33,10 +46,10 @@ export function MatchStatusBadge({ status }: { status: MatchStatus }) {
   const meta = STATUS_META[status];
   const Icon = meta.icon;
   return (
-    <Badge variant={meta.variant} className="gap-1">
+    <div className={cn('gap-1', meta.className)}>
       <Icon className="size-3" />
       {meta.label}
-    </Badge>
+    </div>
   );
 }
 

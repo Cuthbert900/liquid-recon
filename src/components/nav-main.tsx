@@ -28,7 +28,7 @@ export function NavMain({
       {label && <SidebarGroupLabel>{label}</SidebarGroupLabel>}
       <SidebarMenu>
         {items.map((item) => (
-          <SidebarMenuItem key={item.title}>
+          <SidebarMenuItem key={item.title} data-active={pathname === item.url}>
             <SidebarMenuButton
               isActive={pathname === item.url}
               tooltip={item.title}

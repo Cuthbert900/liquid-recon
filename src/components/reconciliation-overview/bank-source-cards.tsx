@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useDataSources } from '@/lib/data-sources-context';
 import { useReconciliation } from '@/lib/reconciliation-context';
-import { normalizeExtract } from '@/lib/reconciliation-engine';
+import { normalizeExtract } from '@/lib/normalization';
 import { identifyBank } from '@/lib/bank-logos';
 import { cn } from '@/lib/utils';
 

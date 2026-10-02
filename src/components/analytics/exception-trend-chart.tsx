@@ -75,9 +75,10 @@ export function ExceptionTrendChart({ points }: ExceptionTrendChartProps) {
         <Area
           type="monotone"
           dataKey="value"
-          stroke="var(--status-critical)"
-          strokeWidth={2}
+          stroke="var(--color-alert-text)"
+          strokeWidth={2.5}
           fill="url(#exceptionFill)"
+          fillOpacity={0.1}
         />
       </AreaChart>
     </ChartContainer>

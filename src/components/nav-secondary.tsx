@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
 import {
   SidebarGroup,
@@ -187,16 +188,24 @@ export function NavSecondary({
     icon: React.ReactNode;
   }[];
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+  const pathname = usePathname();
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
+            <SidebarMenuItem
+              key={item.title}
+              data-active={pathname === item.url}
+            >
               {item.title === 'Notifications' ? (
                 <NotificationDropdown icon={item.icon} />
               ) : (
-                <SidebarMenuButton size="sm" render={<Link href={item.url} />}>
+                <SidebarMenuButton
+                  size="sm"
+                  render={<Link href={item.url} />}
+                  isActive={pathname === item.url}
+                >
                   {item.icon}
                   <span>{item.title}</span>
                 </SidebarMenuButton>

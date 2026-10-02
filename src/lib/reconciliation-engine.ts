@@ -1,5 +1,6 @@
 import logger from '@/lib/logger';
 import { normalizeExtract, type NormalizedRecord } from '@/lib/normalization';
+export type { NormalizedRecord };
 import type { SourceKey, StoredExtract } from '@/lib/data-sources-context';
 import {
   detectDuplicates,

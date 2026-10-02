@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -57,7 +57,7 @@ const itemVariants = {
   },
 };
 
-export default function SignInPage() {
+function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get('next') || '/dashboard';
@@ -91,6 +91,212 @@ export default function SignInPage() {
   }
 
   return (
+    <motion.div
+      className="w-full max-w-sm"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {/* Logo (mobile) */}
+      <motion.div
+        className="mb-8 flex flex-col items-center lg:hidden"
+        variants={itemVariants}
+      >
+        <div className="bg-brand-gradient flex size-10 items-center justify-center rounded-xl text-white">
+          <GitCompareIcon className="size-5" />
+        </div>
+      </motion.div>
+
+      {/* Heading */}
+      <motion.div className="text-center" variants={itemVariants}>
+        <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
+        <p className="mt-1.5 text-sm text-muted-foreground">
+          Sign in with your Liquid Intelligent Technologies account
+        </p>
+      </motion.div>
+
+      {/* SSO button — Azure AD / Entra ID SSO isn't wired up yet (see
+          terraform/README.md); disabled rather than silently doing
+          nothing when clicked. */}
+      <motion.div className="mt-8" variants={itemVariants}>
+        <Button
+          variant="outline"
+          size="lg"
+          className="w-full gap-2"
+          disabled
+          title="Coming soon"
+        >
+          <Image
+            src="/logos/microsoft-com.png"
+            alt="Microsoft"
+            width={16}
+            height={16}
+            className="size-4"
+          />
+          <span className="text-sm">
+            Continue with Microsoft 365 (coming soon)
+          </span>
+        </Button>
+      </motion.div>
+
+      {/* Divider */}
+      <motion.div
+        className="relative my-6 flex items-center"
+        variants={itemVariants}
+      >
+        <div className="flex-1 border-t border-border" />
+        <span className="mx-3 text-xs text-muted-foreground">
+          or sign in with email
+        </span>
+        <div className="flex-1 border-t border-border" />
+      </motion.div>
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {idleTimedOut && !error && (
+          <motion.div
+            variants={itemVariants}
+            className="rounded-lg border border-amber-500/30 bg-amber-500/5 px-3 py-2 text-xs text-amber-700 dark:text-amber-400"
+          >
+            You were signed out after 15 minutes of inactivity. Sign in again to
+            continue.
+          </motion.div>
+        )}
+        {error && (
+          <motion.div
+            variants={itemVariants}
+            className="rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs text-destructive"
+          >
+            {error}
+          </motion.div>
+        )}
+        <motion.div variants={itemVariants}>
+          <label htmlFor="email" className="mb-1.5 block text-sm font-medium">
+            Email
+          </label>
+          <InputGroup>
+            <InputGroupAddon align="inline-start">
+              <MailIcon className="size-4 text-muted-foreground" />
+            </InputGroupAddon>
+            <InputGroupInput
+              id="email"
+              type="email"
+              placeholder="name@example.com"
+              autoComplete="username"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </InputGroup>
+        </motion.div>
+
+        <motion.div variants={itemVariants}>
+          <div className="mb-1.5 flex items-center justify-between">
+            <label htmlFor="password" className="text-sm font-medium">
+              Password
+            </label>
+            <Link
+              href="#"
+              className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Forgot password?
+            </Link>
+          </div>
+          <InputGroup>
+            <InputGroupAddon align="inline-start">
+              <LockIcon className="size-4 text-muted-foreground" />
+            </InputGroupAddon>
+            <InputGroupInput
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <InputGroupAddon align="inline-end">
+              <InputGroupButton
+                size="icon-xs"
+                variant="ghost"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? (
+                  <EyeOffIcon className="size-3.5 text-muted-foreground" />
+                ) : (
+                  <EyeIcon className="size-3.5 text-muted-foreground" />
+                )}
+              </InputGroupButton>
+            </InputGroupAddon>
+          </InputGroup>
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="pt-1">
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full"
+            disabled={isLoading || isSuccess}
+          >
+            {isLoading ? (
+              <>
+                <Loader2Icon className="size-4 animate-spin" />
+                <span>Signing in...</span>
+              </>
+            ) : isSuccess ? (
+              <>
+                <CheckIcon className="size-4" />
+                <span>Success!</span>
+              </>
+            ) : (
+              <span>Sign in</span>
+            )}
+          </Button>
+        </motion.div>
+      </form>
+
+      {/* Footer */}
+      <motion.p
+        className="mt-6 text-center text-sm text-muted-foreground"
+        variants={itemVariants}
+      >
+        Don't have an account?{' '}
+        <Link
+          href="/sign-up"
+          className="font-medium text-foreground underline-offset-4 transition-colors hover:underline"
+        >
+          Sign up
+        </Link>
+      </motion.p>
+
+      {/* Secured badge */}
+      <motion.div
+        className="mt-8 flex items-center justify-center gap-1.5 text-xs text-muted-foreground/60"
+        variants={itemVariants}
+      >
+        <ShieldCheckIcon className="size-3.5" />
+        <span>256-bit SSL encrypted</span>
+      </motion.div>
+
+      {/* Cassava AI attribution */}
+      <motion.div
+        className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground/50"
+        variants={itemVariants}
+      >
+        <img
+          src="/logos/cassava-mark.png"
+          alt="Cassava AI"
+          className="size-3 opacity-70"
+        />
+        <span>Built by Cassava AI</span>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+export default function SignInPage() {
+  return (
     <div className="flex min-h-svh">
       {/* Left panel - Globe */}
       <div className="relative hidden w-1/2 flex-col justify-between bg-zinc-950 lg:flex">
@@ -120,7 +326,7 @@ export default function SignInPage() {
               reconciliation into minutes of exception review.&rdquo;
             </blockquote>
             <p className="mt-3 text-xs text-white/50">
-              &mdash; Treasury &amp; Billing, Liquid Intelligent Technologies
+              &mdash; Treasury & Billing, Liquid Intelligent Technologies
             </p>
           </div>
         </div>
@@ -128,214 +334,9 @@ export default function SignInPage() {
 
       {/* Right panel - Form */}
       <div className="flex flex-1 items-center justify-center bg-background px-6 py-12">
-        <motion.div
-          className="w-full max-w-sm"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {/* Logo (mobile) */}
-          <motion.div
-            className="mb-8 flex flex-col items-center lg:hidden"
-            variants={itemVariants}
-          >
-            <div className="bg-brand-gradient flex size-10 items-center justify-center rounded-xl text-white">
-              <GitCompareIcon className="size-5" />
-            </div>
-          </motion.div>
-
-          {/* Heading */}
-          <motion.div className="text-center" variants={itemVariants}>
-            <h1 className="text-2xl font-semibold tracking-tight">
-              Welcome back
-            </h1>
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              Sign in with your Liquid Intelligent Technologies account
-            </p>
-          </motion.div>
-
-          {/* SSO button — Azure AD / Entra ID SSO isn't wired up yet (see
-              terraform/README.md); disabled rather than silently doing
-              nothing when clicked. */}
-          <motion.div className="mt-8" variants={itemVariants}>
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full gap-2"
-              disabled
-              title="Coming soon"
-            >
-              <Image
-                src="/logos/microsoft-com.png"
-                alt="Microsoft"
-                width={16}
-                height={16}
-                className="size-4"
-              />
-              <span className="text-sm">
-                Continue with Microsoft 365 (coming soon)
-              </span>
-            </Button>
-          </motion.div>
-
-          {/* Divider */}
-          <motion.div
-            className="relative my-6 flex items-center"
-            variants={itemVariants}
-          >
-            <div className="flex-1 border-t border-border" />
-            <span className="mx-3 text-xs text-muted-foreground">
-              or sign in with email
-            </span>
-            <div className="flex-1 border-t border-border" />
-          </motion.div>
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {idleTimedOut && !error && (
-              <motion.div
-                variants={itemVariants}
-                className="rounded-lg border border-amber-500/30 bg-amber-500/5 px-3 py-2 text-xs text-amber-700 dark:text-amber-400"
-              >
-                You were signed out after 15 minutes of inactivity. Sign in
-                again to continue.
-              </motion.div>
-            )}
-            {error && (
-              <motion.div
-                variants={itemVariants}
-                className="rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs text-destructive"
-              >
-                {error}
-              </motion.div>
-            )}
-            <motion.div variants={itemVariants}>
-              <label
-                htmlFor="email"
-                className="mb-1.5 block text-sm font-medium"
-              >
-                Email
-              </label>
-              <InputGroup>
-                <InputGroupAddon align="inline-start">
-                  <MailIcon className="size-4 text-muted-foreground" />
-                </InputGroupAddon>
-                <InputGroupInput
-                  id="email"
-                  type="email"
-                  placeholder="name@example.com"
-                  autoComplete="username"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </InputGroup>
-            </motion.div>
-
-            <motion.div variants={itemVariants}>
-              <div className="mb-1.5 flex items-center justify-between">
-                <label htmlFor="password" className="text-sm font-medium">
-                  Password
-                </label>
-                <Link
-                  href="#"
-                  className="text-xs text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  Forgot password?
-                </Link>
-              </div>
-              <InputGroup>
-                <InputGroupAddon align="inline-start">
-                  <LockIcon className="size-4 text-muted-foreground" />
-                </InputGroupAddon>
-                <InputGroupInput
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter your password"
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <InputGroupAddon align="inline-end">
-                  <InputGroupButton
-                    size="icon-xs"
-                    variant="ghost"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={
-                      showPassword ? 'Hide password' : 'Show password'
-                    }
-                  >
-                    {showPassword ? (
-                      <EyeOffIcon className="size-3.5 text-muted-foreground" />
-                    ) : (
-                      <EyeIcon className="size-3.5 text-muted-foreground" />
-                    )}
-                  </InputGroupButton>
-                </InputGroupAddon>
-              </InputGroup>
-            </motion.div>
-
-            <motion.div variants={itemVariants} className="pt-1">
-              <Button
-                type="submit"
-                size="lg"
-                className="w-full"
-                disabled={isLoading || isSuccess}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2Icon className="size-4 animate-spin" />
-                    <span>Signing in...</span>
-                  </>
-                ) : isSuccess ? (
-                  <>
-                    <CheckIcon className="size-4" />
-                    <span>Success!</span>
-                  </>
-                ) : (
-                  <span>Sign in</span>
-                )}
-              </Button>
-            </motion.div>
-          </form>
-
-          {/* Footer */}
-          <motion.p
-            className="mt-6 text-center text-sm text-muted-foreground"
-            variants={itemVariants}
-          >
-            Don&apos;t have an account?{' '}
-            <Link
-              href="/sign-up"
-              className="font-medium text-foreground underline-offset-4 transition-colors hover:underline"
-            >
-              Sign up
-            </Link>
-          </motion.p>
-
-          {/* Secured badge */}
-          <motion.div
-            className="mt-8 flex items-center justify-center gap-1.5 text-xs text-muted-foreground/60"
-            variants={itemVariants}
-          >
-            <ShieldCheckIcon className="size-3.5" />
-            <span>256-bit SSL encrypted</span>
-          </motion.div>
-
-          {/* Cassava AI attribution */}
-          <motion.div
-            className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground/50"
-            variants={itemVariants}
-          >
-            <img
-              src="/logos/cassava-mark.png"
-              alt="Cassava AI"
-              className="size-3 opacity-70"
-            />
-            <span>Built by Cassava AI</span>
-          </motion.div>
-        </motion.div>
+        <Suspense fallback={<div>Loading...</div>}>
+          <SignInForm />
+        </Suspense>
       </div>
     </div>
   );

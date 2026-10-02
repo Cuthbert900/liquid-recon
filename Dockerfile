@@ -7,20 +7,19 @@
 # ---- deps: install once, cached as long as lockfiles don't change ----
 FROM node:22.2.0-alpine AS deps
 WORKDIR /app
-# `corepack enable` alone doesn't install a pnpm version — it just wires up
-# the shim, and without a "packageManager" field to read, some Corepack
-# builds fail outright on the first `pnpm` invocation instead of guessing a
-# version. Pin explicitly so this always resolves to the same pnpm that
-# generated pnpm-lock.yaml (12.5.1 — see package.json's "packageManager"),
-# which --frozen-lockfile needs to match anyway.
-RUN corepack enable && corepack prepare pnpm@12.5.1 --activate
-COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml* ./
+ENV PNPM_CONFIG_MINIMUM_RELEASE_AGE=0
+ENV PNPM_CONFIG_STRICT_DEP_BUILDS=false
+# Install pnpm directly to avoid corepack signature issues.
+RUN npm install -g pnpm
+COPY package.json pnpm-lock.yaml .npmrc ./
 RUN pnpm install --frozen-lockfile
 
 # ---- builder: compile the app ----
 FROM node:22.2.0-alpine AS builder
 WORKDIR /app
-RUN corepack enable && corepack prepare pnpm@12.5.1 --activate
+ENV PNPM_CONFIG_MINIMUM_RELEASE_AGE=0
+ENV PNPM_CONFIG_STRICT_DEP_BUILDS=false
+RUN npm install -g pnpm
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 

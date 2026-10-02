@@ -46,7 +46,7 @@ export const PROVIDERS: ProviderMeta[] = [
     label: 'Gemini (Google)',
     description: 'Gemini via the Google Generative Language API',
     envKey: 'GEMINI_API_KEY',
-    defaultModel: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
+    defaultModel: process.env.GEMINI_MODEL || 'gemini-3.8-flash',
   },
 ];
 

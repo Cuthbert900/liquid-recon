@@ -12,7 +12,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatMoney } from '@/components/matches/match-status-badge';
-import { SOURCE_LABELS } from '@/lib/data-sources-context';
+import { SOURCE_LABELS, type SourceKey } from '@/lib/data-sources-context';
 import { useDuplicateOverrides } from '@/lib/duplicate-overrides-context';
 import type { DuplicateGroup } from '@/lib/duplicate-detection';
 import { CopyIcon, CheckIcon } from 'lucide-react';
@@ -92,7 +92,7 @@ export function DuplicateReviewPanel({
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="text-[10px]">
-                    {SOURCE_LABELS[group.source]}
+                    {SOURCE_LABELS[group.source as SourceKey]}
                   </Badge>
                   <span className="text-xs text-muted-foreground">
                     {group.reason === 'reference'

@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { motion } from 'motion/react';
 import { GitCompareIcon, ShieldCheckIcon, UserPlusIcon } from 'lucide-react';

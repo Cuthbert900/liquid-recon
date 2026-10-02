@@ -4,152 +4,90 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans:
-    'Montserrat', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace;
-  --font-heading: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+@theme {
+  /* Premium Slate Canvas & Typography Base */
+  --color-background: #f8fafc; /* Soft Slate 50 canvas background */
+  --color-foreground: #0f172a; /* Deep Slate 900 for high-contrast primary text */
+  --color-card: #ffffff; /* Crisp white card containers */
+  --color-card-foreground: #0f172a;
+
+  /* Brand Identity & Infrastructure */
+  --color-primary: #4f46e5; /* Trusted Indigo 600 for primary links/actions */
+  --color-primary-foreground: #ffffff;
+  --color-muted: #64748b; /* Slate 500 for secondary text and table headers */
+  --color-border: #e2e8f0; /* Light Slate 200 for thin boundaries */
+
+  /* Accessible, High-Readability Status Tokens (Muted Backgrounds, Rich Text) */
+  --color-success-bg: #ecfdf5; /* Emerald 50 - Used for Matched Cleanly / On Track */
+  --color-success-text: #047857; /* Emerald 700 */
+
+  --color-warning-bg: #fffbeb; /* Amber 50 - Used for Timing Differences / Pending */
+  --color-warning-text: #b45309; /* Amber 700 */
+
+  --color-alert-bg: #fff1f2; /* Rose 50 - Used for Investigate / Mis-posts / Exceptions */
+  --color-alert-text: #be123c; /* Rose 700 */
 }
 
 :root {
-  /* Liquid Intelligent Technologies brand colours (Brand Guide, May 2021) */
-  --liquid-blue: #273c88;
-  --liquid-blue-700: #1c2c65;
-  --liquid-blue-100: #e7eaf5;
-  --liquid-magenta: #c8187d;
-  --liquid-magenta-100: #fbe4f1;
-
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.19 0.03 265);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.19 0.03 265);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.19 0.03 265);
-  --primary: var(--liquid-blue);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: var(--liquid-blue-100);
-  --secondary-foreground: var(--liquid-blue);
-  --muted: oklch(0.97 0.005 265);
-  --muted-foreground: oklch(0.5 0.02 265);
-  --accent: var(--liquid-magenta-100);
-  --accent-foreground: var(--liquid-magenta);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.9 0.01 265);
-  --input: oklch(0.9 0.01 265);
-  --ring: var(--liquid-blue);
-  --chart-1: var(--liquid-blue);
-  --chart-2: var(--liquid-magenta);
-  --chart-3: #6d3fa0;
-  --chart-4: #16a34a;
-  --chart-5: #d97706;
-
-  /* Reconciliation charts: a dedicated categorical set (source identity) and
-     a fixed status ramp (good/warning/serious/critical). Both are validated
-     against the dataviz skill's six checks in light AND dark mode with the
-     same hex values, so they are intentionally mode-invariant — no .dark
-     override needed. Kept separate from --chart-1..5 (brand/UI colors) so a
-     data mark never doubles as a UI accent. */
-  --data-dynamics: #5470c4;
-  --data-prism: #c8187d;
-  --data-bank: #6d3fa0;
-  --status-good: #0ca30c;
-  --status-warning: #fab219;
-  --status-serious: #ec835a;
-  --status-critical: #d03b3b;
-
-  --radius: 0.625rem;
-  --sidebar: oklch(0.99 0.003 265);
-  --sidebar-foreground: oklch(0.19 0.03 265);
-  --sidebar-primary: var(--liquid-blue);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: var(--liquid-blue-100);
-  --sidebar-accent-foreground: var(--liquid-blue);
-  --sidebar-border: oklch(0.92 0.01 265);
-  --sidebar-ring: var(--liquid-blue);
+  --liquid-blue: #4a3280;
+  --liquid-magenta: #c81a7f;
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
+  --card: var(--color-card);
+  --card-foreground: var(--color-card-foreground);
+  --popover: var(--color-card);
+  --popover-foreground: var(--color-card-foreground);
+  --primary: var(--color-primary);
+  --primary-foreground: var(--color-primary-foreground);
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: var(--color-muted);
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+  --destructive: #ef4444;
+  --border: var(--color-border);
+  --input: var(--color-border);
+  --ring: var(--color-primary);
+  --radius: 0.5rem;
 }
 
 .dark {
-  --liquid-blue: #4a5fb0;
-  --liquid-blue-700: #1c2c65;
-  --liquid-blue-100: oklch(0.28 0.05 265);
-  --liquid-magenta: #e14a9e;
-  --liquid-magenta-100: oklch(0.28 0.08 340);
-
-  --background: oklch(0.145 0.01 265);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0.015 265);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0.015 265);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: var(--liquid-blue);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: var(--liquid-blue-100);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0.01 265);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: var(--liquid-magenta-100);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: var(--liquid-blue);
-  --chart-1: var(--liquid-blue);
-  --chart-2: var(--liquid-magenta);
-  --chart-3: #a67ad4;
-  --chart-4: #34d399;
-  --chart-5: #fbbf24;
-  --sidebar: oklch(0.19 0.015 265);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: var(--liquid-blue);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0.01 265);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: var(--liquid-blue);
+  --background: #020617;
+  --foreground: #f8fafc;
+  --card: #0f172a;
+  --card-foreground: #f8fafc;
+  --popover: #0f172a;
+  --popover-foreground: #f8fafc;
+  --primary: #6366f1;
+  --primary-foreground: #f8fafc;
+  --secondary: #1e293b;
+  --secondary-foreground: #f8fafc;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --accent: #1e293b;
+  --accent-foreground: #f8fafc;
+  --destructive: #7f1d1d;
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: #6366f1;
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
+
+  .group\/menu-item[data-active='true']::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--color-primary);
+  }
+
   body {
     @apply bg-background text-foreground;
   }

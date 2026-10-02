@@ -171,16 +171,15 @@ export function AiAssistantPageClient() {
                   Answers are grounded in the extracts uploaded on the Data
                   Sources page.
                 </p>
-                <div className="flex flex-wrap justify-center gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {SUGGESTED_PROMPTS.map((p) => (
-                    <Button
+                    <button
                       key={p}
-                      variant="outline"
-                      size="sm"
                       onClick={() => send(p)}
+                      className="rounded-lg border border-neutral-200 bg-neutral-50/50 p-4 text-sm text-neutral-600 transition-colors hover:bg-neutral-100/70 hover:text-neutral-900 cursor-pointer"
                     >
                       {p}
-                    </Button>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -212,8 +211,8 @@ export function AiAssistantPageClient() {
                   className={cn(
                     'max-w-[75%] rounded-2xl px-4 py-2.5 text-sm whitespace-pre-wrap',
                     m.role === 'user'
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted'
+                      ? 'bg-primary text-primary-foreground rounded-tr-none'
+                      : 'bg-sky-100 dark:bg-sky-900 border border-sky-200/60 p-5 rounded-xl shadow-xs text-slate-800 dark:text-neutral-200 leading-relaxed'
                   )}
                 >
                   {m.content}
@@ -241,7 +240,7 @@ export function AiAssistantPageClient() {
             )}
           </div>
 
-          <div className="flex items-center gap-2 border-t p-4">
+          <div className="relative flex items-center rounded-xl border border-neutral-200 bg-background px-4 py-3 shadow-xs focus-within:ring-2 focus-within:ring-primary/20">
             <Textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -252,7 +251,7 @@ export function AiAssistantPageClient() {
                 }
               }}
               placeholder="Ask about this month's reconciliation..."
-              className="min-h-10 flex-1 resize-none"
+              className="min-h-10 flex-1 resize-none border-0 shadow-none focus-visible:ring-0"
               rows={1}
             />
             <Button
@@ -269,13 +268,24 @@ export function AiAssistantPageClient() {
 
       <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
         <span>Grounded on:</span>
-        <Badge variant="outline">
+        <Badge
+          variant="secondary"
+          className="bg-slate-100 text-slate-700 font-mono text-xs px-2.5 py-1 rounded-full"
+        >
           {result.totalsBySource.dynamics.count} Dynamics
         </Badge>
-        <Badge variant="outline">
+        <Badge
+          variant="secondary"
+          className="bg-slate-100 text-slate-700 font-mono text-xs px-2.5 py-1 rounded-full"
+        >
           {result.totalsBySource.prism.count} Prism
         </Badge>
-        <Badge variant="outline">{result.totalsBySource.bank.count} Bank</Badge>
+        <Badge
+          variant="secondary"
+          className="bg-slate-100 text-slate-700 font-mono text-xs px-2.5 py-1 rounded-full"
+        >
+          {result.totalsBySource.bank.count} Bank
+        </Badge>
       </div>
     </div>
   );
