@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "prepare": "husky",
-    "test": "vitest"
+    "test": "vitest",
+    "snyk:test": "snyk test",
+    "snyk:monitor": "snyk monitor"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
