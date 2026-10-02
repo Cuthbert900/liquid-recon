@@ -4,12 +4,13 @@ import { cache } from 'react';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { hasPermission, ROLES, type UserRole } from '@/lib/roles';
 
 export interface AppUser {
   id: string;
   email: string;
   display_name: string | null;
-  role: 'admin' | 'user';
+  role: UserRole;
   created_at: string;
   created_by: string | null;
   last_active_at: string | null;
@@ -59,7 +60,7 @@ export const verifyAdmin = cache(
       .eq('id', user.id)
       .maybeSingle<AppUser>();
 
-    if (!appUser || appUser.role !== 'admin') {
+    if (!appUser || !hasPermission(appUser.role, ROLES.ADMIN)) {
       redirect('/admin/not-authorized');
     }
 
